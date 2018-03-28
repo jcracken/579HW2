@@ -93,8 +93,7 @@ int main(void) {
 				n->setPredCost(calcH(temp));
 				n->setCurrCost(currCost + 2);
 				curr.push_back(*n);
-			}
-			else if (loc == 0) {
+			} else if (loc == 0) {
 				std::swap(temp[loc + 1], temp[loc]);
 				n = new node(temp);
 				n->setPredCost(calcH(temp));
@@ -108,8 +107,51 @@ int main(void) {
 				n->setPredCost(calcH(temp));
 				n->setCurrCost(currCost + 2);
 				curr.push_back(*n);
-			}
-			else {
+			} else if (loc == 1) {
+				std::swap(temp[loc - 1], temp[loc]);
+				n = new node(temp);
+				n->setPredCost(calcH(temp));
+				n->setCurrCost(currCost + 1);
+				curr.push_back(*n);
+
+				std::swap(temp[loc - 1], temp[loc]);
+
+				std::swap(temp[loc + 1], temp[loc]);
+				n = new node(temp);
+				n->setPredCost(calcH(temp));
+				n->setCurrCost(currCost + 1);
+				curr.push_back(*n);
+
+				std::swap(temp[loc + 1], temp[loc]);
+
+				std::swap(temp[loc + 2], temp[loc]);
+				n = new node(temp);
+				n->setPredCost(calcH(temp));
+				n->setCurrCost(currCost + 2);
+				curr.push_back(*n);
+			} else if (loc == temp.size() - 2) {
+				std::swap(temp[loc - 1], temp[loc]);
+				n = new node(temp);
+				n->setPredCost(calcH(temp));
+				n->setCurrCost(currCost + 1);
+				curr.push_back(*n);
+
+				std::swap(temp[loc - 1], temp[loc]);
+
+				std::swap(temp[loc - 2], temp[loc]);
+				n = new node(temp);
+				n->setPredCost(calcH(temp));
+				n->setCurrCost(currCost + 2);
+				curr.push_back(*n);
+
+				std::swap(temp[loc - 2], temp[loc]);
+
+				std::swap(temp[loc + 1], temp[loc]);
+				n = new node(temp);
+				n->setPredCost(calcH(temp));
+				n->setCurrCost(currCost + 1);
+				curr.push_back(*n);
+			} else {
 				std::swap(temp[loc - 1], temp[loc]);
 				n = new node(temp);
 				n->setPredCost(calcH(temp));
@@ -162,9 +204,7 @@ int main(void) {
 					temp.at(i) = past.at(costLoc).getState().at(i);
 				}
 				pred = past.at(costLoc).getPredCost();
-				for (i = past.size(); i > costLoc; i--) {
-					past.erase(past.begin() + i);
-				}
+				past.erase(past.begin() + costLoc);
 			} else {
 				currCost = curr.at(costLoc).getCurrCost();
 				for (i = 0; i < temp.size(); i++) {
