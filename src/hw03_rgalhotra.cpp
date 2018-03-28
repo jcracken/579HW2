@@ -13,7 +13,7 @@ int calcH(std::vector<char> state) {
 
 	for (i = 0; i < state.size(); i++) {
 		if (state.at(i) == 'W') {
-			for (j = i; j < state.size(); j++) {
+			for (j = 0; j < i; j++) {
 				if (state.at(j) == 'B') {
 					num++;
 					break;
@@ -186,6 +186,14 @@ int main(void) {
 			cost = curr.at(0).getPredCost() + curr.at(0).getCurrCost();
 
 			for (i = 0; i < curr.size(); i++) {
+				if (curr.at(i).getPredCost() == 0) {
+					cost = curr.at(i).getPredCost() + curr.at(i).getCurrCost();
+					costLoc = i;
+					for (i = 0; i < temp.size(); i++) {
+						temp.at(i) = curr.at(costLoc).getState().at(i);
+					}
+					goto over;
+				}
 				if (curr.at(i).getPredCost() + curr.at(i).getCurrCost() < cost) {
 					cost = curr.at(i).getPredCost() + curr.at(i).getCurrCost();
 					costLoc = i;
@@ -198,7 +206,25 @@ int main(void) {
 					prev = true;
 				}
 			}
-			lab:
+			for (i = 0; i < past.size(); i++) {
+				for (j = 0; j < curr.size(); j++) {
+					if (past.at(i).comp(&curr.at(j)) && j != costLoc) {
+						curr.erase(curr.begin() + j);
+						j--;
+					} else if (past.at(i).comp(&curr.at(j)) && j == costLoc) {
+						prev = true;
+						costLoc = i;
+					}
+				}
+			}
+			for (i = 0; i < curr.size(); i++) {
+				for (j = i + 1; j < curr.size(); j++) {
+					if (curr.at(i).comp(&curr.at(j))) {
+						curr.erase(curr.begin() + j);
+						j--;
+					}
+				}
+			}
 			if (prev) {
 				currCost = past.at(costLoc).getCurrCost();
 				for (i = 0; i < temp.size(); i++) {
@@ -207,17 +233,6 @@ int main(void) {
 				pred = past.at(costLoc).getPredCost();
 				past.erase(past.begin() + costLoc);
 			} else {
-				for (i = 0; i < past.size(); i++) {
-					for (j = 0; j < curr.size(); j++) {
-						if (past.at(i).comp(&curr.at(j)) && j != costLoc) {
-							curr.erase(curr.begin() + j);
-						} else if (past.at(i).comp(&curr.at(j)) && j == costLoc) {
-							prev = true;
-							costLoc = i;
-							goto lab;
-						}
-					}
-				}
 				currCost = curr.at(costLoc).getCurrCost();
 				for (i = 0; i < temp.size(); i++) {
 					temp.at(i) = curr.at(costLoc).getState().at(i);
@@ -229,6 +244,7 @@ int main(void) {
 					}
 				}
 			}
+			over:
 			pred = calcH(temp);
 			if (pred == 0) {
 				done = true;
@@ -243,7 +259,7 @@ int main(void) {
 		}
 	}
 
-	std::cout << "Total cost = " << currCost << std::endl;
+	std::cout << "Total cost = " << cost << std::endl;
 	std::cout << "Number of states expanded = " << stateNum << std::endl;
 
 	return 0;
