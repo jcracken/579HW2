@@ -44,7 +44,8 @@ int main(void) {
 
 	int currCost = 0, stateNum = 0;
 	int cost = 0, pred = 0;
-	unsigned int loc, costLoc;
+	unsigned int costLoc;
+	int loc;
 	bool done = false;
 	bool prev = false;
 
@@ -79,7 +80,7 @@ int main(void) {
 
 		loc = findEmpty(temp);
 		if (loc != -1) {
-			if (loc == temp.size() - 1) {
+			if ((unsigned)loc == temp.size() - 1) {
 				std::swap(temp[temp.size() - 2], temp[temp.size() - 1]);
 				n = new node(temp);
 				n->setPredCost(calcH(temp));
@@ -129,7 +130,7 @@ int main(void) {
 				n->setPredCost(calcH(temp));
 				n->setCurrCost(currCost + 2);
 				curr.push_back(*n);
-			} else if (loc == temp.size() - 2) {
+			} else if ((unsigned)loc == temp.size() - 2) {
 				std::swap(temp[loc - 1], temp[loc]);
 				n = new node(temp);
 				n->setPredCost(calcH(temp));
