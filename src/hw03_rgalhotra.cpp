@@ -232,6 +232,9 @@ int main(void) {
 				}
 				pred = past.at(costLoc).getPredCost();
 				past.erase(past.begin() + costLoc);
+				for (i = 0; i < curr.size(); i++) {
+					past.push_back(curr.at(i));
+				}
 			} else {
 				currCost = curr.at(costLoc).getCurrCost();
 				for (i = 0; i < temp.size(); i++) {
