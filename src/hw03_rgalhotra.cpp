@@ -35,7 +35,7 @@ int findEmpty(std::vector<char> state) {
 int main(void) {
 
 	std::string in;
-	unsigned int i = 0;
+	unsigned int i = 0, j = 0;
 
 	std::vector<char> state;
 	std::vector<char> temp;
@@ -56,7 +56,7 @@ int main(void) {
 	}
 
 	for (i = 0; i < state.size(); i++) {
-		temp.at(i) = state.at(i);
+		temp.push_back(state.at(i));
 	}
 
 	pred = calcH(temp);
@@ -198,6 +198,7 @@ int main(void) {
 					prev = true;
 				}
 			}
+			lab:
 			if (prev) {
 				currCost = past.at(costLoc).getCurrCost();
 				for (i = 0; i < temp.size(); i++) {
@@ -206,6 +207,17 @@ int main(void) {
 				pred = past.at(costLoc).getPredCost();
 				past.erase(past.begin() + costLoc);
 			} else {
+				for (i = 0; i < past.size(); i++) {
+					for (j = 0; j < curr.size(); j++) {
+						if (past.at(i).comp(&curr.at(j)) && j != costLoc) {
+							curr.erase(curr.begin() + j);
+						} else if (past.at(i).comp(&curr.at(j)) && j == costLoc) {
+							prev = true;
+							costLoc = i;
+							goto lab;
+						}
+					}
+				}
 				currCost = curr.at(costLoc).getCurrCost();
 				for (i = 0; i < temp.size(); i++) {
 					temp.at(i) = curr.at(costLoc).getState().at(i);

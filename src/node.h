@@ -16,5 +16,6 @@ public:
 	int getPredCost();
 	int getCurrCost();
 	std::vector<char> getState();
+	bool comp(node* other);
 };
 #endif
